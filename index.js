@@ -3,14 +3,19 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const PORT = process.env.PORT;
 
+// Import router
+const articles = require("./routes/articles");
+
 // Create the express app
 const app = express();
 
-// Routes and middleware
+// Middleware
 // app.use(/* ... */)
-// app.get(/* ... */)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Routers
+app.use("/articles", articles);
 
 // Error handlers
 app.use(function fourOhFourHandler(req, res) {
