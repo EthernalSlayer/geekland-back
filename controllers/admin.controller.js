@@ -22,6 +22,18 @@ class AdminController {
       }
     });
   }
+
+  static deleteArticle(req, res) {
+    Admin.delete(req.params.id, (err) => {
+      if (err) {
+        res.status(500).json({ error: err.message, sql: err.sql });
+      } else {
+        res
+          .status(200)
+          .json({ message: `article ${req.params.id} a été supprimer` });
+      }
+    });
+  }
 }
 
 module.exports = AdminController;
