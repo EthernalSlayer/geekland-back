@@ -6,7 +6,16 @@ const cors = require("cors");
 const PORT = process.env.PORT;
 
 //multer options
-const upload = multer({ dest: "images" });
+let storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./images");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // Import router
 const articles = require("./routes/articles");
