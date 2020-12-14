@@ -1,7 +1,12 @@
 require("dotenv").config();
 const express = require("express");
+const multer = require("multer");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const PORT = process.env.PORT;
+
+//multer options
+const upload = multer({ dest: "images" });
 
 // Import router
 const articles = require("./routes/articles");
@@ -13,9 +18,16 @@ const app = express();
 // app.use(/* ... */)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.static("images"));
 
 // Routers
 app.use("/articles", articles);
+
+//upload route
+app.post("/upload", upload.single("upload"), (req, res) => {
+  res.send();
+});
 
 // Error handlers
 app.use(function fourOhFourHandler(req, res) {
