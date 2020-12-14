@@ -8,6 +8,10 @@ class Admin {
   static update(body, id, next) {
     db.query("UPDATE articles SET ? WHERE id = ?", [body, id], next);
   }
+
+  static delete(id, next) {
+    db.query("DELETE FROM articles WHERE id = ?", [id], next);
+  }
 }
 
 module.exports = Admin;
