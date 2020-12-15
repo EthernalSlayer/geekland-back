@@ -20,6 +20,7 @@ const upload = multer({ storage: storage });
 // Import router
 const articles = require("./routes/articles");
 const admin = require("./routes/admin");
+const user = require("./routes/user");
 
 // Create the express app
 const app = express();
@@ -34,6 +35,7 @@ app.use(express.static("images"));
 // Routers
 app.use("/articles", articles);
 app.use("/admin", admin);
+app.use("/user", user);
 
 //upload route
 app.post("/upload", upload.single("upload"), (req, res) => {
