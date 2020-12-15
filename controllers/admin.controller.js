@@ -26,26 +26,50 @@ class AdminController {
   }
 
   static putArticle(req, res) {
-    Admin.update(req.body, req.params.id, (err) => {
-      if (err) {
-        res.status(500).json({ error: err.message, sql: err.sql });
-      } else {
-        req.body.id = req.params.id;
-        res.status(200).json(req.body);
-      }
-    });
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader;
+      jwt.verify(token, process.env.SECRET, (err) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          Admin.update(req.body, req.params.id, (err) => {
+            if (err) {
+              res.status(500).json({ error: err.message, sql: err.sql });
+            } else {
+              req.body.id = req.params.id;
+              res.status(200).json(req.body);
+            }
+          });
+        }
+      });
+    } else {
+      res.sendStatus(401);
+    }
   }
 
   static deleteArticle(req, res) {
-    Admin.delete(req.params.id, (err) => {
-      if (err) {
-        res.status(500).json({ error: err.message, sql: err.sql });
-      } else {
-        res
-          .status(200)
-          .json({ message: `article ${req.params.id} a été supprimer` });
-      }
-    });
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader;
+      jwt.verify(token, process.env.SECRET, (err) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          Admin.delete(req.params.id, (err) => {
+            if (err) {
+              res.status(500).json({ error: err.message, sql: err.sql });
+            } else {
+              res
+                .status(200)
+                .json({ message: `article ${req.params.id} a été supprimer` });
+            }
+          });
+        }
+      });
+    } else {
+      res.sendStatus(401);
+    }
   }
 }
 
