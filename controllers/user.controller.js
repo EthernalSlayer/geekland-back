@@ -25,7 +25,6 @@ class UserController {
         res.status(500).json({ error: err.message, sql: err.sql });
       } else {
         if (results[0] !== undefined) {
-          console.log(results[0].password);
           if (results[0].password === hashPass) {
             let data = {
               id: results[0].id,

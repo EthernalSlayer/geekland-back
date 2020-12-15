@@ -1,15 +1,28 @@
 const Admin = require("../models/admin.model");
+const jwt = require("jsonwebtoken");
 
 class AdminController {
   static postArticle(req, res) {
-    Admin.create(req.body, (err) => {
-      if (err) {
-        res.status(500).json({ error: err.message, sql: err.sql });
-      } else {
-        req.body.id = res.insertId;
-        res.status(201).json(req.body);
-      }
-    });
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = authHeader;
+      jwt.verify(token, process.env.SECRET, (err) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          Admin.create(req.body, (err) => {
+            if (err) {
+              res.status(500).json({ error: err.message, sql: err.sql });
+            } else {
+              req.body.id = res.insertId;
+              res.status(201).json(req.body);
+            }
+          });
+        }
+      });
+    } else {
+      res.sendStatus(401);
+    }
   }
 
   static putArticle(req, res) {
